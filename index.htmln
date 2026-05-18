@@ -1,0 +1,1659 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>極上セキュリティ新規会員登録・地獄篇</title>
+    <!-- Tailwind CSS for premium design -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti for winning effect -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            background: radial-gradient(circle at top left, #111029, #05050c);
+        }
+        .shaking {
+            animation: shake 0.5s infinite;
+        }
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(0px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(2px, 1px) rotate(-1deg); }
+            85% { transform: translate(-1px, -1px) rotate(1deg); }
+            100% { transform: translate(1px, -2px) rotate(0deg); }
+        }
+        .cyber-panel {
+            background: rgba(15, 17, 32, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(139, 92, 246, 0.25);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #05050c;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2e1065;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4c1d95;
+        }
+        /* Custom Micro Slider */
+        .micro-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 4px;
+            background: #1e1b4b;
+            border-radius: 2px;
+            outline: none;
+        }
+        .micro-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 8px;
+            height: 18px;
+            border-radius: 2px;
+            background: #a78bfa;
+            cursor: pointer;
+            box-shadow: 0 0 8px #a78bfa;
+            transition: background 0.1s;
+        }
+        .micro-slider::-webkit-slider-thumb:active {
+            background: #ec4899;
+            box-shadow: 0 0 12px #ec4899;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-100 flex flex-col items-center justify-center py-6 md:py-16 px-2 sm:px-4 overflow-x-hidden relative">
+
+<script>
+    let audioCtx = null;
+
+    function initAudio() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+    }
+
+    function playSound(type) {
+        try {
+            initAudio();
+            if (!audioCtx || document.getElementById('mute-toggle').checked) return;
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            const now = audioCtx.currentTime;
+
+            if (type === 'click') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(600, now);
+                osc.frequency.exponentialRampToValueAtTime(800, now + 0.1);
+                gain.gain.setValueAtTime(0.08, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                osc.start(now);
+                osc.stop(now + 0.1);
+            } else if (type === 'combo') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(800, now);
+                osc.frequency.setValueAtTime(1300, now + 0.08);
+                gain.gain.setValueAtTime(0.12, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.18);
+                osc.start(now);
+                osc.stop(now + 0.18);
+            } else if (type === 'error') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(140, now);
+                osc.frequency.linearRampToValueAtTime(90, now + 0.35);
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+                osc.start(now);
+                osc.stop(now + 0.35);
+            } else if (type === 'success') {
+                const notes = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99, 1046.50]; 
+                notes.forEach((freq, i) => {
+                    const noteOsc = audioCtx.createOscillator();
+                    const noteGain = audioCtx.createGain();
+                    noteOsc.connect(noteGain);
+                    noteGain.connect(audioCtx.destination);
+                    noteOsc.type = 'sine';
+                    noteOsc.frequency.setValueAtTime(freq, now + i * 0.08);
+                    noteGain.gain.setValueAtTime(0.06, now + i * 0.08);
+                    noteGain.gain.exponentialRampToValueAtTime(0.005, now + i * 0.08 + 0.25);
+                    noteOsc.start(now + i * 0.08);
+                    noteOsc.stop(now + i * 0.08 + 0.3);
+                });
+            } else if (type === 'tick') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(1000, now);
+                gain.gain.setValueAtTime(0.02, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+                osc.start(now);
+                osc.stop(now + 0.05);
+            }
+        } catch (e) {
+            console.log('Audio error:', e);
+        }
+    }
+</script>
+
+<div class="w-full max-w-3xl cyber-panel rounded-2xl md:rounded-3xl p-4 sm:p-8 md:p-12 shadow-2xl relative z-10 transition-all duration-300">
+    
+    <!-- Top Bar Controls -->
+    <div class="absolute top-4 right-4 flex items-center space-x-4 bg-slate-900/80 py-1.5 px-3 rounded-full border border-slate-700 z-20">
+        <label class="flex items-center space-x-2 cursor-pointer text-[10px] md:text-xs font-semibold tracking-wider text-slate-300 hover:text-white">
+            <i id="volume-icon" class="fa-solid fa-volume-high"></i>
+            <span>SOUND ON</span>
+            <input type="checkbox" id="mute-toggle" class="sr-only" onchange="playSound('click')">
+            <div class="w-8 h-4 bg-indigo-600 rounded-full relative transition-colors duration-200" id="toggle-bg">
+                <div class="w-3 h-3 bg-white rounded-full absolute top-0.5 left-0.5 transition-transform duration-200" id="toggle-knob"></div>
+            </div>
+        </label>
+    </div>
+
+    <!-- Session Countdown Timer (Hellish Limit) -->
+    <div class="mb-6 p-4 bg-red-955/40 border border-red-500/20 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4 mt-6 md:mt-0">
+        <div class="flex items-center space-x-3 w-full md:w-auto">
+            <div class="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center text-red-400 border border-red-500/30 flex-shrink-0 animate-pulse">
+                <i class="fa-solid fa-hourglass-half text-lg"></i>
+            </div>
+            <div>
+                <h3 class="text-[10px] md:text-xs font-black tracking-widest text-red-400 uppercase">SECURITY SESSION TIMER</h3>
+                <p class="text-[10px] text-slate-400">セッション切断まで: <strong id="timer-display" class="text-red-400 font-black text-xs md:text-sm">03:00</strong></p>
+            </div>
+        </div>
+        <button type="button" onclick="extendTime()" id="btn-extend" class="w-full md:w-auto px-4 py-2.5 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-500 hover:to-pink-500 active:scale-95 text-slate-100 font-extrabold text-[10px] md:text-[11px] rounded-xl shadow-md border border-red-400/30 transition-all flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-cookie-bite animate-bounce"></i>
+            <span>時間延長バナナを捕食 (+30秒)</span>
+        </button>
+    </div>
+
+    <!-- Header Section -->
+    <div class="text-center mb-8 mt-2">
+        <div class="inline-flex items-center justify-center w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-purple-600/20 border border-purple-500/30 text-purple-400 mb-4 animate-pulse">
+            <i class="fa-solid fa-triangle-exclamation text-2xl md:text-3xl"></i>
+        </div>
+        <h1 class="text-xl sm:text-2xl md:text-4xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-amber-400">
+            ULTIMATE SECURE REGISTRATION
+        </h1>
+        <p class="text-[10px] md:text-xs text-slate-400 mt-2 tracking-widest uppercase px-2">
+            地獄の要件が大幅増殖、国家暗号レベルの15重障壁を完全攻略せよ
+        </p>
+    </div>
+
+    <!-- Overall Registration Progress Bar -->
+    <div class="mb-8">
+        <div class="flex justify-between text-[11px] md:text-xs font-bold text-purple-400 mb-2">
+            <span>セキュリティ適合度 (15の地獄門):</span>
+            <span id="overall-progress-text">0%</span>
+        </div>
+        <div class="w-full bg-slate-900 rounded-full h-3 p-0.5 border border-slate-850">
+            <div id="overall-progress-bar" class="bg-gradient-to-r from-red-500 via-amber-500 to-emerald-500 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+        </div>
+    </div>
+
+    <!-- FORM START -->
+    <form id="registration-form" onsubmit="handleSubmit(event)" class="space-y-6 md:space-y-8" autocomplete="off">
+        
+        <!-- Field 1: Name (Katakana Only) -->
+        <div class="space-y-2">
+            <label class="block text-xs md:text-sm font-bold tracking-wide text-slate-200">
+                1. 氏名 <span class="text-red-400 text-[10px] md:text-xs">※全角カタカナのみ</span>
+            </label>
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                    <i class="fa-solid fa-signature"></i>
+                </div>
+                <input type="text" id="input-name" placeholder="サトウ　タロウ"
+                    class="w-full pl-10 pr-4 py-2.5 md:py-3 bg-slate-900/80 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-slate-100 placeholder-slate-500 transition-all font-medium text-sm md:text-base"
+                    oninput="validateName()">
+            </div>
+            <div id="name-feedback" class="text-[10px] md:text-xs font-semibold text-slate-400 flex items-center gap-1">
+                <i class="fa-solid fa-circle-question"></i> 全角カタカナのみ入力可能です（全角スペース推奨）。
+            </div>
+        </div>
+
+        <!-- Field 2: Favorite Banana Length (Super Simple Slider) -->
+        <div class="space-y-2 p-4 bg-slate-900/40 rounded-2xl border border-slate-800">
+            <label class="block text-xs md:text-sm font-bold tracking-wide text-slate-200">
+                2. 大好きなバナナの長さ測定 <span class="text-amber-400 text-[10px] md:text-xs">※目標値に合わせるだけ</span>
+            </label>
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-950/40 p-3 rounded-xl border border-slate-800">
+                <div class="text-xs font-bold text-slate-300">
+                    目標: <span class="text-amber-400 font-extrabold">15 cm</span>
+                </div>
+                <div class="flex-1 w-full flex items-center space-x-3">
+                    <input type="range" id="slider-banana-len" min="5" max="25" value="5" class="micro-slider flex-1 cursor-pointer" oninput="validateBananaLength()">
+                    <span id="display-banana-len" class="text-sm font-black text-indigo-400 w-12 text-right">5 cm</span>
+                </div>
+            </div>
+            <div id="banana-len-feedback" class="text-[10px] md:text-xs font-semibold text-slate-400 flex items-center gap-1">
+                <i class="fa-solid fa-circle-question"></i> スライダーを動かして「15 cm」に調整してください。
+            </div>
+        </div>
+
+        <!-- Field 3: Birth Date (The Alternating Tap Counter Game) -->
+        <div class="p-4 md:p-6 bg-slate-900/60 rounded-2xl border border-slate-800 space-y-4">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                <label class="block text-xs md:text-sm font-bold tracking-wide text-slate-200">
+                    3. 生年月日カウンター <span class="text-red-400 text-[10px] md:text-xs">※交互連打で増加</span>
+                </label>
+                <div class="flex items-center space-x-1.5 text-[10px] md:text-xs text-indigo-400 font-bold bg-indigo-950/50 px-2.5 py-1 rounded-full border border-indigo-900">
+                    <i class="fa-solid fa-fire animate-bounce"></i>
+                    <span>Combo: <span id="combo-count">0</span></span>
+                    <span class="text-slate-500">|</span>
+                    <span>CPS: <span id="cps-count">0</span></span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 sm:gap-3">
+                <div id="tab-year" onclick="switchDateTab('year')" class="cursor-pointer border-2 border-indigo-500 bg-indigo-950/30 p-2 sm:p-3 rounded-xl text-center transition-all duration-200 hover:bg-slate-800 select-none">
+                    <div class="text-[8px] md:text-[10px] font-bold text-indigo-400 tracking-wider">YEAR</div>
+                    <div id="display-year" class="text-base sm:text-lg md:text-2xl font-black">1900</div>
+                </div>
+                <div id="tab-month" onclick="switchDateTab('month')" class="cursor-pointer border-2 border-transparent bg-slate-950/40 p-2 sm:p-3 rounded-xl text-center transition-all duration-200 hover:bg-slate-800 select-none">
+                    <div class="text-[8px] md:text-[10px] font-bold text-slate-400 tracking-wider">MONTH</div>
+                    <div id="display-month" class="text-base sm:text-lg md:text-2xl font-black">1</div>
+                </div>
+                <div id="tab-day" onclick="switchDateTab('day')" class="cursor-pointer border-2 border-transparent bg-slate-950/40 p-2 sm:p-3 rounded-xl text-center transition-all duration-200 hover:bg-slate-800 select-none">
+                    <div class="text-[8px] md:text-[10px] font-bold text-slate-400 tracking-wider">DAY</div>
+                    <div id="display-day" class="text-base sm:text-lg md:text-2xl font-black">1</div>
+                </div>
+            </div>
+
+            <div class="flex gap-2 sm:gap-4">
+                <button type="button" onclick="handleCounterPress('up')" id="btn-counter-up"
+                    class="flex-1 py-3 md:py-4 bg-gradient-to-b from-indigo-500 to-indigo-700 hover:from-indigo-400 hover:to-indigo-600 active:translate-y-0.5 rounded-xl font-bold text-slate-100 shadow-lg border-b-4 border-indigo-900 text-center select-none flex flex-col items-center justify-center transition-all">
+                    <span class="text-xs md:text-sm">上のカウンター</span>
+                    <span class="text-[9px] md:text-xs font-semibold text-indigo-200">▲ UP</span>
+                </button>
+                <button type="button" onclick="handleCounterPress('down')" id="btn-counter-down"
+                    class="flex-1 py-3 md:py-4 bg-gradient-to-b from-purple-500 to-purple-700 hover:from-purple-400 hover:to-purple-600 active:translate-y-0.5 rounded-xl font-bold text-slate-100 shadow-lg border-b-4 border-purple-900 text-center select-none flex flex-col items-center justify-center transition-all">
+                    <span class="text-xs md:text-sm">下のカウンター</span>
+                    <span class="text-[9px] md:text-xs font-semibold text-purple-200">▼ DOWN</span>
+                </button>
+            </div>
+            <div class="text-[10px] md:text-[11px] text-slate-400 text-center leading-relaxed font-medium bg-slate-950/30 p-2 rounded-lg border border-slate-800">
+                ⚠️ 「上」を押した後は「下」、「下」の後は「上」と<strong class="text-pink-400">交互に連打</strong>して、選択中(青枠)の数値を増やしてください！
+            </div>
+        </div>
+
+        <!-- Field 4: Banana Loyalty Check (Super Simple Check) -->
+        <div class="space-y-4 p-4 md:p-6 bg-slate-900/60 rounded-2xl border border-slate-800">
+            <label class="block text-xs md:text-sm font-bold tracking-wide text-slate-200">
+                4. バナナへの絶対的な忠誠心誓約 <span class="text-amber-400 text-[10px] md:text-xs">※チェックするだけ</span>
+            </label>
+            <div class="p-3 bg-slate-950/40 rounded-xl border border-slate-800">
+                <label class="flex items-center cursor-pointer select-none group">
+                    <input type="checkbox" id="check-banana-loyalty" class="mr-3 rounded text-indigo-600 focus:ring-0 w-5 h-5" onchange="validateBananaLoyalty()">
+                    <span class="text-xs font-semibold text-slate-300 group-hover:text-slate-100 transition-colors">
+                        私は一生涯、バナナを愛し、大切に保管し、美味しくいただくことを誓います。
+                    </span>
+                </label>
+            </div>
+            <div id="banana-loyalty-feedback" class="text-[10px] md:text-xs font-semibold text-slate-400 flex items-center gap-1">
+                <i class="fa-solid fa-circle-question"></i> 誓約に同意してチェックを入れてください。
+            </div>
+        </div>
+
+        <!-- Field 5: Today's Banana Mood (Super Simple Select) -->
+        <div class="space-y-4 p-4 md:p-6 bg-slate-900/60 rounded-2xl border border-slate-800">
+            <label class="block text-xs md:text-sm font-bold tracking-wide text-slate-200">
+                5. 今日のバナナ気分選択 <span class="text-amber-400 text-[10px] md:text-xs">※どれでも好きなのを選ぶだけ</span>
+            </label>
+            <div class="space-y-2">
+                <select id="select-banana-mood" onchange="validateBananaMood()"
+                    class="w-full px-4 py-2.5 md:py-3 bg-slate-900/80 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-slate-100 transition-all font-medium text-xs md:text-sm">
+                    <option value="">-- 今日のバナナに対する気分を選んでください --</option>
+                    <option value="ripe">完熟バナナ（甘みマックス）</option>
+                    <option value="green">まだ少し青いバナナ（さっぱり）</option>
+                    <option value="frozen">冷凍バナナ（ひんやりスイーツ）</option>
+                    <option value="cake">バナナパウンドケーキ（香ばしい）</option>
+                </select>
+            </div>
+            <div id="banana-mood-feedback" class="text-[10px] md:text-xs font-semibold text-slate-400 flex items-center gap-1">
+                <i class="fa-solid fa-circle-question"></i> あなたの直感に合った気分を1つ選択してください。
+            </div>
+        </div>
+
+        <!-- Field 6: Password (EXTREMELY RIGOROUS Validation with new rules) -->
+        <div class="space-y-4 p-4 md:p-6 bg-slate-900/40 rounded-2xl border border-slate-800">
+            <div class="flex justify-between items-end">
+                <label class="block text-xs md:text-sm font-bold tracking-wide text-slate-200">
+                    6. 超国家秘密パスワード <span class="text-red-400 text-[10px] md:text-xs">※8大難解適合基準</span>
+                </label>
+                <div class="text-[10px] md:text-xs text-indigo-400 font-bold" id="pw-chars-count">0 文字</div>
+            </div>
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                    <i class="fa-solid fa-key"></i>
+                </div>
+                <input type="text" id="input-password" placeholder="素数文字数の難攻不落バナナパスワード"
+                    class="w-full pl-10 pr-4 py-2.5 md:py-3 bg-slate-900/80 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-slate-100 placeholder-slate-500 transition-all font-medium tracking-wide text-sm md:text-base"
+                    oninput="validatePassword()">
+            </div>
+
+            <!-- Password validation checkpoints -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 md:gap-3 bg-slate-950/40 p-4 md:p-5 rounded-2xl border border-slate-800">
+                <div id="pw-check-upper" class="flex items-center space-x-2.5 text-[10px] md:text-xs font-bold text-slate-500 transition-colors duration-200">
+                    <i class="fa-solid fa-circle-xmark text-sm flex-shrink-0"></i>
+                    <span>アルファベット大文字を含む</span>
+                </div>
+                <div id="pw-check-lower" class="flex items-center space-x-2.5 text-[10px] md:text-xs font-bold text-slate-500 transition-colors duration-200">
+                    <i class="fa-solid fa-circle-xmark text-sm flex-shrink-0"></i>
+                    <span>アルファベット小文字を含む</span>
+                </div>
+                <div id="pw-check-symbol" class="flex items-center space-x-2.5 text-[10px] md:text-xs font-bold text-slate-500 transition-colors duration-200">
+                    <i class="fa-solid fa-circle-xmark text-sm flex-shrink-0"></i>
+                    <span>記号を <span class="text-indigo-400" id="pw-symbol-target">ぴったり20個</span> 含む (<span id="pw-symbol-curr">0</span>/20)</span>
+                </div>
+                <div id="pw-check-number" class="flex items-center space-x-2.5 text-[10px] md:text-xs font-bold text-slate-500 transition-colors duration-200">
+                    <i class="fa-solid fa-circle-xmark text-sm flex-shrink-0"></i>
+                    <span>数字を <span class="text-indigo-400" id="pw-number-target">ぴったり20個</span> 含む (<span id="pw-number-curr">0</span>/20)</span>
+                </div>
+                <div id="pw-check-banana" class="flex items-center space-x-2.5 text-[10px] md:text-xs font-bold text-slate-500 transition-colors duration-200">
+                    <i class="fa-solid fa-circle-xmark text-sm flex-shrink-0"></i>
+                    <span>絶対に <span class="text-amber-400 italic font-black">banana</span> を含む</span>
+                </div>
+                <div id="pw-check-prime" class="flex items-center space-x-2.5 text-[10px] md:text-xs font-bold text-slate-500 transition-colors duration-200">
+                    <i class="fa-solid fa-circle-xmark text-sm flex-shrink-0"></i>
+                    <span>合計文字数が <span class="text-amber-400">素数</span> である（例: 47, 53, 59, 61文字）</span>
+                </div>
+                <div id="pw-check-day" class="flex items-center space-x-2.5 text-[10px] md:text-xs font-bold text-slate-500 transition-colors duration-200">
+                    <i class="fa-solid fa-circle-xmark text-sm flex-shrink-0"></i>
+                    <span>本日の曜日英語 (<span class="text-indigo-400 italic font-bold" id="target-day-name">Loading...</span>) を含む</span>
+                </div>
+                <div id="pw-check-emoji" class="flex items-center space-x-2.5 text-[10px] md:text-xs font-bold text-slate-500 transition-colors duration-200">
+                    <i class="fa-solid fa-circle-xmark text-sm flex-shrink-0"></i>
+                    <span>絵文字 (🍌/🦍/🐒) を <span class="text-indigo-400 font-bold">ぴったり3個</span> 含む (<span id="pw-emoji-curr">0</span>/3)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Field 7: 20-Digit Security PIN (No Backspace Mode) -->
+        <div class="space-y-4 p-4 md:p-6 bg-slate-900/60 rounded-2xl border border-slate-800">
+            <div class="flex justify-between items-center">
+                <label class="block text-xs md:text-sm font-bold tracking-wide text-slate-200">
+                    7. 暗証番号 <span class="text-red-400 text-[10px] md:text-xs">※20桁の数字</span>
+                </label>
+                <button type="button" onclick="clearPin()" class="text-[10px] md:text-xs bg-red-950/40 border border-red-900 hover:bg-red-900/30 text-red-400 px-2.5 py-1 rounded-md transition-all font-bold select-none">
+                    <i class="fa-solid fa-trash-can mr-1"></i>全消去
+                </button>
+            </div>
+            <!-- PIN grid -->
+            <div class="grid grid-cols-10 gap-1 sm:gap-1.5 justify-items-center py-2">
+                <script>
+                    for (let i = 0; i < 20; i++) {
+                        document.write(`
+                            <input type="text" id="pin-${i}" maxlength="1" inputmode="numeric" pattern="[0-9]*"
+                                class="pin-box w-full max-w-[28px] h-9 md:max-w-[36px] md:h-11 bg-slate-950 border border-slate-700 rounded-lg text-center font-black text-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-xs sm:text-sm md:text-lg"
+                                onkeydown="handlePinKey(event, ${i})"
+                                oninput="handlePinInput(${i})">
+                        `);
+                    }
+                </script>
+            </div>
+            <div class="text-[10px] md:text-[11px] text-slate-400 leading-relaxed font-medium">
+                ⚠️ キーボードでの<strong class="text-pink-400">削除（Backspace）は使用不可</strong>です。間違えた場合は「全消去」でやり直してください。
+            </div>
+        </div>
+
+        <!-- Field 8: Agreement via typing -->
+        <div class="space-y-3 p-4 md:p-6 bg-slate-900/60 rounded-2xl border border-slate-800">
+            <label class="block text-xs md:text-sm font-bold tracking-wide text-slate-200">
+                8. 利用規約への同意 <span class="text-red-400 text-[10px] md:text-xs">※完全手動写経</span>
+            </label>
+            <div class="bg-slate-950/80 p-3 md:p-4 rounded-xl border border-slate-800 max-h-24 md:max-h-32 overflow-y-auto text-[10px] md:text-xs text-slate-400 font-medium leading-relaxed select-none" id="agreement-original">
+                私は本日より、バナナを愛し、いかなる理不尽なインターフェースにも屈せず、大文字・小文字、記号20個、数字20個、大好きな言葉を含む、鉄壁のセキュリティを誇るパスワードを一生忘れないことをここに誓約いたします。
+            </div>
+            <div class="space-y-1">
+                <span class="block text-[10px] md:text-[11px] font-bold text-slate-400">
+                    上記の利用規約を一字一句違わず手動で下に入力してください（コピペ禁止）：
+                </span>
+                <textarea id="agreement-input" rows="3" placeholder="ここに利用規約を入力..."
+                    class="w-full p-2.5 md:p-3 bg-slate-900/80 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-[11px] md:text-xs text-slate-100 placeholder-slate-600 transition-all font-medium leading-relaxed"
+                    onpaste="return false;" oncopy="return false;" oncontextmenu="return false;"
+                    oninput="validateAgreement()"></textarea>
+            </div>
+            <div id="agreement-feedback" class="text-[10px] md:text-xs font-semibold text-slate-400 flex items-center justify-between">
+                <span>一致進捗率: <span id="agreement-match-percent" class="text-indigo-400">0%</span></span>
+                <span id="agreement-status" class="text-slate-500">不一致</span>
+            </div>
+        </div>
+
+        <!-- Field 9: Banana Chase Captcha -->
+        <div class="space-y-4 p-4 md:p-6 bg-slate-900/60 rounded-2xl border border-slate-800">
+            <div class="flex justify-between items-center">
+                <label class="block text-xs md:text-sm font-bold tracking-wide text-slate-200">
+                    9. 人間証明 <span class="text-red-400 text-[10px] md:text-xs">※高速ワープバナナ捕獲</span>
+                </label>
+                <div class="text-[10px] md:text-xs font-bold text-indigo-400">捕獲数: <span id="captcha-count" class="text-xs md:text-sm text-pink-500 font-black">0</span> / 3</div>
+            </div>
+            <div id="captcha-area" class="w-full h-32 md:h-36 bg-slate-950/90 rounded-xl border border-slate-800 relative overflow-hidden cursor-crosshair">
+                <div id="captcha-fallback-msg" class="absolute inset-0 flex items-center justify-center text-[9px] md:text-[10px] text-slate-600 font-semibold select-none text-center px-4">
+                    このエリアを逃げ回るバナナをクリックしてください
+                </div>
+                <div id="banana-target" onclick="catchBanana(event)"
+                    class="absolute w-10 h-10 bg-indigo-500/20 hover:bg-indigo-500/40 border border-indigo-500/50 rounded-full flex items-center justify-center cursor-pointer select-none transition-all duration-75 text-xl"
+                    style="left: 45%; top: 35%;">
+                    🍌
+                </div>
+            </div>
+            <div id="captcha-feedback" class="text-[10px] md:text-xs font-semibold text-slate-400">
+                ※不規則に飛び回るバナナを3回確実にクリックしてください。
+            </div>
+        </div>
+
+        <!-- Field 10: Triple Negative Consent Checklist -->
+        <div class="space-y-4 p-4 md:p-6 bg-slate-900/60 rounded-2xl border border-slate-800">
+            <label class="block text-xs md:text-sm font-bold tracking-wide text-slate-200">
+                10. メルマガ購読に関する同意 <span class="text-red-400 text-[10px] md:text-xs">※三重否定ポリシー</span>
+            </label>
+            <div class="p-3 bg-slate-950/40 rounded-xl border border-slate-800 space-y-3">
+                <label class="flex items-start cursor-pointer select-none group">
+                    <input type="checkbox" id="check-triple-consent" class="mt-1 mr-3 rounded text-indigo-600 focus:ring-0 flex-shrink-0" onchange="validateTripleConsent()">
+                    <span class="text-[11px] md:text-xs text-slate-300 font-medium leading-relaxed group-hover:text-slate-100 transition-colors">
+                        私は、お得な情報メール（週250回配信）の送信を拒否することを希望する意思表示を取り消さないことに<strong class="text-pink-400 font-bold">同意しない</strong>。
+                    </span>
+                </label>
+            </div>
+            <div id="triple-feedback" class="text-[10px] md:text-xs font-semibold text-slate-400 flex items-center gap-1">
+                <i class="fa-solid fa-circle-question"></i> 同意事項を確認してチェックを入れてください。
+            </div>
+        </div>
+
+        <!-- Field 11: Banana Yellow RGB Matcher -->
+        <div class="space-y-4 p-4 md:p-6 bg-slate-900/60 rounded-2xl border border-slate-800">
+            <label class="block text-xs md:text-sm font-bold tracking-wide text-slate-200">
+                11. バナナ色純度適合 <span class="text-amber-400 text-[10px] md:text-xs">※RGB簡易（？）調合</span>
+            </label>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex flex-col gap-3 justify-center">
+                    <div>
+                        <span class="block text-[10px] font-bold text-slate-400">目指すターゲット色:</span>
+                        <div class="flex items-center space-x-2 mt-1">
+                            <div class="w-10 h-10 rounded-lg border border-slate-700" style="background-color: rgb(255, 225, 53);"></div>
+                            <span class="text-xs font-black text-amber-300">完全なるバナナ色 (R:255, G:225, B:53)</span>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="block text-[10px] font-bold text-slate-400">現在の調合色:</span>
+                        <div class="flex items-center space-x-2 mt-1">
+                            <div id="user-color-preview" class="w-10 h-10 rounded-lg border border-slate-700 bg-black"></div>
+                            <span class="text-xs font-bold text-slate-300" id="user-rgb-text">R:0, G:0, B:0</span>
+                        </div>
+                    </div>
+                    <div class="mt-1">
+                        <button type="button" id="btn-auto-rgb" onclick="startAutoRGB()" class="w-full py-2 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-slate-950 font-extrabold text-[10px] md:text-xs rounded-lg border border-yellow-400/40 transition-all flex items-center justify-center gap-1.5 shadow-md">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            <span id="auto-rgb-text">【お助け】自動バナナ調合（要CM視聴3秒）</span>
+                        </button>
+                        <div id="rgb-ad-container" class="hidden mt-2 p-2 bg-slate-950 border border-yellow-600/30 rounded-lg text-center">
+                            <div class="text-[9px] text-yellow-500 font-bold animate-pulse">SPONSORED ADVERTISEMENT</div>
+                            <div class="text-[10px] text-slate-300 my-1 font-semibold" id="rgb-ad-content">「バナナを1本買うと、もう1本は有料！」</div>
+                            <div class="text-[8px] text-slate-500">自動調合完了まであと <span id="rgb-ad-timer" class="font-bold text-yellow-500">3</span> 秒...</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-3 bg-slate-950/30 p-3 rounded-xl border border-slate-800">
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-[10px] font-bold text-red-400">RED: <span id="val-r">0</span></span>
+                            <span class="text-[8px] text-slate-500">目標: 255 (許容±5)</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button type="button" onclick="adjustRGB('r', -1)" class="w-7 h-7 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold border border-slate-700 text-xs select-none">-</button>
+                            <input type="range" id="slide-r" min="0" max="255" value="0" class="micro-slider flex-1" oninput="updateRGBMatcher()">
+                            <button type="button" onclick="adjustRGB('r', 1)" class="w-7 h-7 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold border border-slate-700 text-xs select-none">+</button>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-[10px] font-bold text-emerald-400">GREEN: <span id="val-g">0</span></span>
+                            <span class="text-[8px] text-slate-500">目標: 225 (許容±5)</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button type="button" onclick="adjustRGB('g', -1)" class="w-7 h-7 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold border border-slate-700 text-xs select-none">-</button>
+                            <input type="range" id="slide-g" min="0" max="255" value="0" class="micro-slider flex-1" oninput="updateRGBMatcher()">
+                            <button type="button" onclick="adjustRGB('g', 1)" class="w-7 h-7 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold border border-slate-700 text-xs select-none">+</button>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-[10px] font-bold text-indigo-400">BLUE: <span id="val-b">0</span></span>
+                            <span class="text-[8px] text-slate-500">目標: 53 (許容±5)</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button type="button" onclick="adjustRGB('b', -1)" class="w-7 h-7 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold border border-slate-700 text-xs select-none">-</button>
+                            <input type="range" id="slide-b" min="0" max="255" value="0" class="micro-slider flex-1" oninput="updateRGBMatcher()">
+                            <button type="button" onclick="adjustRGB('b', 1)" class="w-7 h-7 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold border border-slate-700 text-xs select-none">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="rgb-feedback" class="text-[10px] md:text-xs font-semibold text-slate-400 flex items-center gap-1">
+                <i class="fa-solid fa-circle-question"></i> 三原色スライダーを正確に調整してターゲットの色を再現してください。
+            </div>
+        </div>
+
+        <!-- Field 12: Virtue Level Gacha -->
+        <div class="space-y-4 p-4 md:p-6 bg-slate-900/60 rounded-2xl border border-slate-800">
+            <div class="flex justify-between items-center">
+                <label class="block text-xs md:text-sm font-bold tracking-wide text-slate-200">
+                    12. アカウント「徳」レベル測定 <span class="text-pink-400 text-[10px] md:text-xs">※大確率5%運任せ</span>
+                </label>
+                <span class="text-[10px] font-bold text-slate-400">ガチャ挑戦回数: <span id="gacha-trials" class="text-indigo-400">0</span></span>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-4 items-center bg-slate-950/40 p-4 rounded-xl border border-slate-800">
+                <button type="button" onclick="rollVirtueGacha()" class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-extrabold text-xs rounded-xl border border-purple-400/30 transition-all select-none">
+                    <i class="fa-solid fa-hands-praying mr-1 animate-pulse"></i> 徳を積み上げる (1連ガチャ)
+                </button>
+                <div class="flex-1 text-center sm:text-left">
+                    <span class="block text-[10px] font-bold text-slate-550 uppercase">現在の徳ステータス</span>
+                    <span id="gacha-result" class="text-sm font-black text-red-500 tracking-wider">徳が完全に不足しています（未挑戦）</span>
+                </div>
+            </div>
+            <div id="gacha-feedback" class="text-[10px] md:text-xs font-semibold text-slate-400 flex items-center gap-1">
+                <i class="fa-solid fa-circle-question"></i> 徳ガチャで最高位「極大徳（ウルトラ徳）」を当選させてください。
+            </div>
+        </div>
+
+        <!-- Field 13: Micro Precision Income Slider -->
+        <div class="space-y-4 p-4 md:p-6 bg-slate-900/60 rounded-2xl border border-slate-800">
+            <label class="block text-xs md:text-sm font-bold tracking-wide text-slate-200">
+                13. 世帯年収申告 <span class="text-red-400 text-[10px] md:text-xs">※指定額に1円のズレなく適合必須</span>
+            </label>
+            <div class="bg-slate-950/60 p-4 rounded-xl border border-slate-800 space-y-3">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                    <span class="text-[10px] font-bold text-indigo-400 uppercase">適合すべき必要申告額:</span>
+                    <span class="text-sm font-black text-amber-400 bg-amber-950/40 border border-amber-900 px-2 py-0.5 rounded-md" id="target-income-display">0円</span>
+                </div>
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                    <span class="text-[10px] font-bold text-pink-400 uppercase">あなたの現在の設定額:</span>
+                    <span class="text-sm font-black text-pink-400 bg-pink-950/40 border border-pink-900 px-2 py-0.5 rounded-md" id="current-income-display">0円</span>
+                </div>
+                <div class="flex items-center space-x-2 bg-slate-950/80 p-3 rounded-lg border border-slate-800">
+                    <button type="button" onclick="adjustIncome(-1)" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold border border-slate-700 text-xs flex items-center justify-center select-none">-1</button>
+                    <input type="range" id="slider-income" min="100000" max="10000000" value="100000" class="micro-slider cursor-pointer flex-1" oninput="onIncomeSliderInput()">
+                    <button type="button" onclick="adjustIncome(1)" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold border border-slate-700 text-xs flex items-center justify-center select-none">+1</button>
+                </div>
+                <div class="grid grid-cols-4 gap-1.5">
+                    <button type="button" onclick="adjustIncome(-10000)" class="py-1 rounded-lg bg-slate-950 text-slate-400 text-[9px] font-bold border border-slate-800 select-none">-1万</button>
+                    <button type="button" onclick="adjustIncome(-100)" class="py-1 rounded-lg bg-slate-950 text-slate-400 text-[9px] font-bold border border-slate-800 select-none">-100</button>
+                    <button type="button" onclick="adjustIncome(100)" class="py-1 rounded-lg bg-slate-950 text-slate-400 text-[9px] font-bold border border-slate-800 select-none">+100</button>
+                    <button type="button" onclick="adjustIncome(10000)" class="py-1 rounded-lg bg-slate-950 text-slate-400 text-[9px] font-bold border border-slate-800 select-none">+1万</button>
+                </div>
+            </div>
+            <div id="income-feedback" class="text-[10px] md:text-xs font-semibold text-slate-400 flex items-center gap-1">
+                <i class="fa-solid fa-circle-question"></i> システムの指定する値に1円の誤差もなくスライダーを調整してください。
+            </div>
+        </div>
+
+        <!-- Field 14: Confession of Crime -->
+        <div class="space-y-4 p-4 md:p-6 bg-slate-900/60 rounded-2xl border border-slate-800">
+            <label class="block text-xs md:text-sm font-bold tracking-wide text-slate-200">
+                14. 秘密の質問と答え <span class="text-red-400 text-[10px] md:text-xs">※前世の罪の懺悔（50文字以上）</span>
+            </label>
+            <div class="space-y-2">
+                <span class="block text-[10px] font-bold text-slate-450 uppercase">秘密の質問:</span>
+                <div class="p-3 bg-slate-950/80 rounded-xl border border-slate-800 text-xs text-indigo-300 font-semibold select-none">
+                    「あなたが前世で犯した、最もバナナに対して失礼な大罪は何ですか？」
+                </div>
+                <span class="block text-[10px] font-bold text-slate-450 uppercase">あなたの懺悔文（コピペ禁止）:</span>
+                <textarea id="confession-input" rows="3" placeholder="私は前世において、バナナの熟度を考慮せず冷蔵庫に放り込み、皮を真っ黒にしてしまうという大罪を..."
+                    class="w-full p-2.5 md:p-3 bg-slate-900/80 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-[11px] md:text-xs text-slate-100 placeholder-slate-600 transition-all font-medium leading-relaxed"
+                    onpaste="return false;" oncopy="return false;" oncontextmenu="return false;"
+                    oninput="validateConfession()"></textarea>
+            </div>
+            <div id="confession-feedback" class="text-[10px] md:text-xs font-semibold text-slate-400 flex items-center justify-between">
+                <span>現在の文字数: <span id="confession-char-count" class="text-indigo-400">0</span> / 50文字</span>
+                <span id="confession-status" class="text-slate-500">文字数不足</span>
+            </div>
+        </div>
+
+        <!-- Field 15: Banana Harvest Timing Game (Replaced Scroll Ratio Lock) -->
+        <div class="space-y-4 p-4 md:p-6 bg-slate-900/60 rounded-2xl border border-slate-800">
+            <label class="block text-xs md:text-sm font-bold tracking-wide text-slate-200">
+                15. 完熟バナナ収穫タイミング <span class="text-pink-400 text-[10px] md:text-xs">※熟度「87.7%」の瞬間に収穫ボタンをプッシュ</span>
+            </label>
+            <div class="p-4 bg-slate-950/60 rounded-xl border border-slate-800 flex flex-col items-center justify-center text-center space-y-4 select-none">
+                <div class="flex items-center justify-between w-full text-[10px] font-bold text-slate-450 uppercase">
+                    <span>ターゲット熟度: <strong class="text-amber-400">87.7%</strong> (誤差±15.0%まで大目に見ます！)</span>
+                    <span>現在の熟度: <span id="harvest-percentage-display" class="text-sm font-black text-red-500 w-16 text-right">0.0%</span></span>
+                </div>
+                
+                <!-- Timing Gauge Bar -->
+                <div class="w-full bg-slate-900 h-6 rounded-lg relative overflow-hidden border border-slate-800">
+                    <!-- Goal Marker Line -->
+                    <div class="absolute top-0 bottom-0 bg-amber-400/80 w-1.5 z-10 animate-pulse" style="left: 87.7%; transform: translateX(-50%);"></div>
+                    <!-- Current Position Indicator -->
+                    <div id="harvest-gauge-bar" class="h-full bg-gradient-to-r from-yellow-600 via-amber-500 to-yellow-400 transition-all duration-75" style="width: 0%"></div>
+                </div>
+
+                <div class="flex gap-2 w-full">
+                    <button type="button" id="btn-harvest" onclick="stopHarvest()" class="flex-1 py-3 bg-gradient-to-b from-pink-500 to-rose-600 hover:from-pink-400 hover:to-rose-500 active:scale-95 rounded-xl font-bold text-slate-100 shadow-md border-b-4 border-rose-800 text-xs transition-all select-none">
+                        <i class="fa-solid fa-scissors mr-1.5"></i>収穫（STOP）
+                    </button>
+                    <button type="button" id="btn-harvest-reset" onclick="resetHarvest()" class="py-3 px-4 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-bold text-xs border border-slate-700 select-none transition-all">
+                        やり直し
+                    </button>
+                </div>
+
+                <!-- CM Assist for low speed -->
+                <div class="w-full">
+                    <button type="button" id="btn-slow-harvest" onclick="startSlowHarvestCM()" class="w-full py-2 bg-gradient-to-r from-purple-800/80 to-indigo-800/80 hover:from-purple-700/80 hover:to-indigo-700/80 text-purple-300 font-extrabold text-[10px] md:text-xs rounded-lg border border-purple-700/40 transition-all flex items-center justify-center gap-1.5 shadow-md">
+                        <i class="fa-solid fa-eye"></i>
+                        <span id="slow-harvest-text">【お助け】CMを3秒観て、ゲージ速度を「超スロー」にする</span>
+                    </button>
+                    <div id="harvest-ad-container" class="hidden mt-2 p-2 bg-slate-950 border border-purple-600/30 rounded-lg text-center">
+                        <div class="text-[9px] text-purple-500 font-bold animate-pulse">SPONSORED ADVERTISEMENT</div>
+                        <div class="text-[10px] text-slate-300 my-1 font-semibold" id="harvest-ad-content">「バナナの皮で滑る確率を科学するマガジン、創刊！」</div>
+                        <div class="text-[8px] text-slate-500">超スロー化まであと <span id="harvest-ad-timer" class="font-bold text-purple-500">3</span> 秒...</div>
+                    </div>
+                </div>
+            </div>
+            <div id="harvest-feedback" class="text-[10px] md:text-xs font-semibold text-slate-400 flex items-center gap-1">
+                <i class="fa-solid fa-circle-question"></i> 動く熟度ゲージを「72.7%〜100.0%」の広大な範囲でストップさせてください。
+            </div>
+        </div>
+
+        <!-- Submit Button Wrap with running behavior -->
+        <div id="submit-wrapper" class="relative py-4">
+            <button type="submit" id="btn-submit"
+                class="w-full py-3.5 md:py-4 px-6 bg-gradient-to-r from-purple-650 via-indigo-650 to-pink-650 rounded-xl font-extrabold text-slate-100 shadow-xl text-center select-none uppercase tracking-widest text-xs md:text-sm transition-all duration-300 transform"
+                style="left: 0px; top: 0px;">
+                <i class="fa-solid fa-lock mr-2"></i>アカウント安全登録
+            </button>
+        </div>
+
+    </form>
+    <!-- FORM END -->
+
+</div>
+
+<!-- Interactive Modal for Success Message -->
+<div id="success-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="max-w-md w-full cyber-panel rounded-3xl p-6 md:p-8 border border-emerald-500/30 text-center shadow-2xl transform scale-95 transition-transform duration-300">
+        <div class="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-full bg-emerald-500/20 text-emerald-400 mb-6 border border-emerald-500/40">
+            <i class="fa-solid fa-circle-check text-3xl md:text-4xl animate-bounce"></i>
+        </div>
+        <h2 class="text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300 mb-3">
+            REGISTRATION COMPLETE!
+        </h2>
+        <p class="text-slate-300 text-xs md:text-sm leading-relaxed mb-6 font-semibold">
+            おめでとうございます！素数文字パスワード、バナナ色調合、1円単位年収、徳の最大ガチャ、完熟バナナ収穫を含む「15重の絶対地獄」を突破しました！
+        </p>
+        <button onclick="closeSuccessModal()" class="w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-900 font-extrabold rounded-xl transition-all shadow-lg text-xs md:text-sm">
+            わかった（最初からやり直す）
+        </button>
+    </div>
+</div>
+
+<!-- Floating Session Extension Banana -->
+<div id="floating-banana" onclick="catchFloatingBanana(event)"
+    class="fixed w-11 h-11 md:w-12 md:h-12 bg-yellow-500 border-2 border-yellow-300 rounded-full flex items-center justify-center cursor-pointer select-none transition-all duration-300 shadow-lg text-2xl z-50 animate-bounce"
+    style="left: -100px; top: -100px; display: none;">
+    🍌
+</div>
+
+<script>
+    const valState = {
+        name: false,
+        banana_length: false, 
+        birthday: false, 
+        banana_loyalty: false, 
+        banana_mood: false, 
+        password: false,
+        pin: false,
+        agreement: false,
+        captcha: false, 
+        terms_triple: false,
+        rgb_match: false,
+        virtue_gacha: false,
+        income: false,
+        confession: false,
+        banana_harvest: false
+    };
+
+    const prefecturesList = [
+        "北海道", "青森県", "岩手県", "宮城県", "秋田県", "山形県", "福島県", "茨城県", "栃木県", "群馬県",
+        "埼玉県", "千葉県", "東京都", "神奈川県", "新潟県", "富山県", "石川県", "福井県", "山梨県", "長野県",
+        "岐阜県", "静岡県", "愛知県", "三重県", "滋賀県", "京都府", "大阪府", "兵庫県", "奈良県", "和歌山県",
+        "鳥取県", "島根県", "岡山県", "広島県", "山口県", "徳島県", "香川県", "愛媛県", "高知県", "福岡県",
+        "佐賀県", "長崎県", "熊本県", "大分県", "宮崎県", "鹿児島県", "沖縄県"
+    ];
+
+    const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+    function currentDayOfWeek() {
+        return dayNames[new Date().getDay()];
+    }
+
+    let floatingBananaTimer = null;
+    function startFloatingBananaLoop() {
+        const banana = document.getElementById('floating-banana');
+        if (!banana) return;
+        
+        banana.style.display = 'flex';
+        
+        function moveBanana() {
+            // Screen boundaries
+            const pad = 60;
+            const x = Math.random() * (window.innerWidth - pad);
+            const y = Math.random() * (window.innerHeight - pad);
+            banana.style.left = `${Math.max(10, x)}px`;
+            banana.style.top = `${Math.max(10, y)}px`;
+        }
+        
+        moveBanana();
+        floatingBananaTimer = setInterval(moveBanana, 4000);
+    }
+
+    function catchFloatingBanana(e) {
+        e.stopPropagation();
+        playSound('combo');
+        extendTime();
+        
+        const banana = document.getElementById('floating-banana');
+        banana.classList.add('scale-150');
+        setTimeout(() => banana.classList.remove('scale-150'), 250);
+    }
+
+    window.onload = function() {
+        startSecurityTimer(180);
+        startCaptchaWarp();
+        startFloatingBananaLoop();
+        document.getElementById('mute-toggle').checked = false;
+        document.getElementById('target-day-name').innerText = currentDayOfWeek();
+        
+        // Random Income Goal Generation
+        const randomTargetIncome = Math.floor(Math.random() * (9000000 - 300000) + 300000);
+        document.getElementById('target-income-display').innerText = formatCurrency(randomTargetIncome) + "円";
+        document.getElementById('slider-income').dataset.target = randomTargetIncome;
+        
+        startHarvestGameLoop();
+    }
+
+    document.getElementById('mute-toggle').addEventListener('change', function() {
+        const bg = document.getElementById('toggle-bg');
+        const knob = document.getElementById('toggle-knob');
+        const icon = document.getElementById('volume-icon');
+        if (this.checked) {
+            bg.classList.replace('bg-indigo-600', 'bg-slate-700');
+            knob.classList.replace('left-0.5', 'translate-x-4');
+            icon.className = 'fa-solid fa-volume-xmark';
+        } else {
+            bg.classList.replace('bg-slate-700', 'bg-indigo-600');
+            knob.classList.replace('translate-x-4', 'left-0.5');
+            icon.className = 'fa-solid fa-volume-high';
+        }
+    });
+
+    let secondsLeft = 180;
+    let timerInterval = null;
+
+    function startSecurityTimer(secs) {
+        secondsLeft = secs;
+        clearInterval(timerInterval);
+        
+        timerInterval = setInterval(() => {
+            secondsLeft--;
+            if (secondsLeft <= 0) {
+                clearInterval(timerInterval);
+                playSound('error');
+                alert("セキュリティタイムアウト！制限時間を超過したため、全データは物理消去されました。最初からやり直してください。");
+                window.location.reload();
+                return;
+            }
+            if (secondsLeft <= 30 && secondsLeft % 2 === 0) {
+                playSound('tick');
+            }
+            updateTimerDisplay();
+        }, 1000);
+    }
+
+    function updateTimerDisplay() {
+        const mins = Math.floor(secondsLeft / 60);
+        const secs = secondsLeft % 60;
+        const display = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        document.getElementById('timer-display').innerText = display;
+
+        const displayLabel = document.getElementById('timer-display');
+        if (secondsLeft <= 30) {
+            displayLabel.className = "text-red-400 font-black text-xs animate-ping";
+        } else {
+            displayLabel.className = "text-red-400 font-black text-xs";
+        }
+    }
+
+    function extendTime() {
+        playSound('click');
+        secondsLeft += 30;
+        if (secondsLeft > 300) secondsLeft = 300; 
+        updateTimerDisplay();
+        const extendBtn = document.getElementById('btn-extend');
+        if (Math.random() < 0.4) {
+            extendBtn.classList.add('shaking');
+            setTimeout(() => extendBtn.classList.remove('shaking'), 500);
+        }
+    }
+</script>
+
+<script>
+    function validateName() {
+        const input = document.getElementById('input-name');
+        const feedback = document.getElementById('name-feedback');
+        const val = input.value;
+        const katakanaRegex = /^[　 \u30A1-\u30FC]+$/;
+
+        if (val.length === 0) {
+            valState.name = false;
+            feedback.innerHTML = `<i class="fa-solid fa-circle-question"></i> 全角カタカナのみ入力可能です（全角スペース推奨）。`;
+            feedback.className = "text-[10px] md:text-xs font-semibold text-slate-400 flex items-center gap-1";
+        } else if (katakanaRegex.test(val)) {
+            valState.name = true;
+            feedback.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> カタカナ入力完璧です！`;
+            feedback.className = "text-[10px] md:text-xs font-semibold text-emerald-400 flex items-center gap-1";
+        } else {
+            valState.name = false;
+            feedback.innerHTML = `<i class="fa-solid fa-circle-exclamation text-red-400"></i> 漢字やひらがな、半角は認められません！`;
+            feedback.className = "text-[10px] md:text-xs font-semibold text-red-400 flex items-center gap-1";
+        }
+        updateGlobalProgress();
+    }
+
+    function validateBananaLength() {
+        const slider = document.getElementById('slider-banana-len');
+        const display = document.getElementById('display-banana-len');
+        const feedback = document.getElementById('banana-len-feedback');
+        const val = parseInt(slider.value);
+
+        display.innerText = `${val} cm`;
+
+        if (val === 15) {
+            valState.banana_length = true;
+            feedback.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> ジャスト 15 cm！完璧な長さです。`;
+            feedback.className = "text-[10px] md:text-xs font-semibold text-emerald-400 flex items-center gap-1";
+            playSound('success');
+        } else {
+            valState.banana_length = false;
+            feedback.innerHTML = `<i class="fa-solid fa-circle-exclamation text-red-400"></i> 目標の「15 cm」に合わせてください（現在: ${val} cm）。`;
+            feedback.className = "text-[10px] md:text-xs font-semibold text-red-400 flex items-center gap-1";
+        }
+        updateGlobalProgress();
+    }
+
+    function validateBananaLoyalty() {
+        const checked = document.getElementById('check-banana-loyalty').checked;
+        const feedback = document.getElementById('banana-loyalty-feedback');
+
+        if (checked) {
+            valState.banana_loyalty = true;
+            feedback.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> 忠誠心が証明されました。感謝いたします！`;
+            feedback.className = "text-[10px] md:text-xs font-semibold text-emerald-400 flex items-center gap-1";
+            playSound('success');
+        } else {
+            valState.banana_loyalty = false;
+            feedback.innerHTML = `<i class="fa-solid fa-circle-exclamation text-red-400"></i> 誓約に同意してチェックを入れてください。`;
+            feedback.className = "text-[10px] md:text-xs font-semibold text-red-400 flex items-center gap-1";
+        }
+        updateGlobalProgress();
+    }
+
+    function validateBananaMood() {
+        const select = document.getElementById('select-banana-mood');
+        const val = select.value;
+        const feedback = document.getElementById('banana-mood-feedback');
+
+        if (val !== "") {
+            valState.banana_mood = true;
+            feedback.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> 素晴らしい気分です！バナナライフを楽しみましょう。`;
+            feedback.className = "text-[10px] md:text-xs font-semibold text-emerald-400 flex items-center gap-1";
+            playSound('success');
+        } else {
+            valState.banana_mood = false;
+            feedback.innerHTML = `<i class="fa-solid fa-circle-exclamation text-red-400"></i> 気分を選択してください。`;
+            feedback.className = "text-[10px] md:text-xs font-semibold text-red-400 flex items-center gap-1";
+        }
+        updateGlobalProgress();
+    }
+
+    let birthDate = { year: 1900, month: 1, day: 1 };
+    let activeDateTab = 'year';
+    let lastCounterDirection = null; 
+    let comboCount = 0;
+    let clickTimestamps = [];
+
+    function registerClickCps() {
+        const now = Date.now();
+        clickTimestamps.push(now);
+        clickTimestamps = clickTimestamps.filter(t => now - t < 1000);
+        document.getElementById('cps-count').innerText = clickTimestamps.length;
+    }
+
+    setInterval(() => {
+        const now = Date.now();
+        clickTimestamps = clickTimestamps.filter(t => now - t < 1000);
+        document.getElementById('cps-count').innerText = clickTimestamps.length;
+    }, 500);
+
+    function switchDateTab(tab) {
+        playSound('click');
+        activeDateTab = tab;
+        ['year', 'month', 'day'].forEach(t => {
+            const el = document.getElementById(`tab-${t}`);
+            if (t === tab) {
+                el.className = "cursor-pointer border-2 border-indigo-500 bg-indigo-950/30 p-2 sm:p-3 rounded-xl text-center transition-all duration-200 hover:bg-slate-800";
+            } else {
+                el.className = "cursor-pointer border-2 border-transparent bg-slate-950/40 p-2 sm:p-3 rounded-xl text-center transition-all duration-200 hover:bg-slate-800";
+            }
+        });
+    }
+
+    function handleCounterPress(direction) {
+        registerClickCps();
+        initAudio();
+
+        if (lastCounterDirection === null) {
+            lastCounterDirection = direction;
+            incrementActiveTab(1);
+            comboCount = 1;
+            playSound('click');
+        } else if (lastCounterDirection === direction) {
+            comboCount = 0;
+            playSound('error');
+            triggerButtonShake(direction === 'up' ? 'btn-counter-up' : 'btn-counter-down');
+        } else {
+            lastCounterDirection = direction;
+            comboCount++;
+
+            let multiplier = 1;
+            if (comboCount > 25) {
+                multiplier = 5;
+                if (comboCount % 5 === 0) playSound('combo');
+            } else if (comboCount > 10) {
+                multiplier = 2;
+                if (comboCount % 2 === 0) playSound('combo');
+            } else {
+                playSound('click');
+            }
+            incrementActiveTab(multiplier);
+        }
+
+        document.getElementById('combo-count').innerText = comboCount;
+        validateBirthday();
+        updateGlobalProgress();
+    }
+
+    function incrementActiveTab(amount) {
+        if (activeDateTab === 'year') {
+            birthDate.year += amount;
+            if (birthDate.year > 2026) birthDate.year = 1900; 
+            document.getElementById('display-year').innerText = birthDate.year;
+        } else if (activeDateTab === 'month') {
+            birthDate.month += amount;
+            if (birthDate.month > 12) birthDate.month = 1;
+            document.getElementById('display-month').innerText = birthDate.month;
+        } else if (activeDateTab === 'day') {
+            birthDate.day += amount;
+            const maxDays = new Date(birthDate.year, birthDate.month, 0).getDate() || 31;
+            if (birthDate.day > maxDays) birthDate.day = 1;
+            document.getElementById('display-day').innerText = birthDate.day;
+        }
+    }
+
+    function triggerButtonShake(id) {
+        const btn = document.getElementById(id);
+        btn.classList.add('shaking');
+        setTimeout(() => btn.classList.remove('shaking'), 400);
+    }
+
+    function validateBirthday() {
+        if (birthDate.year !== 1900 || birthDate.month !== 1 || birthDate.day !== 1) {
+            valState.birthday = true;
+        } else {
+            valState.birthday = false;
+        }
+    }
+
+    function isPrime(num) {
+        if (num <= 1) return false;
+        if (num <= 3) return true;
+        if (num % 2 === 0 || num % 3 === 0) return false;
+        for (let i = 5; i * i <= num; i += 6) {
+            if (num % i === 0 || num % (i + 2) === 0) return false;
+        }
+        return true;
+    }
+
+    function validatePassword() {
+        const input = document.getElementById('input-password');
+        const val = input.value;
+
+        document.getElementById('pw-chars-count').innerText = `${val.length} 文字`;
+
+        const hasUpper = /[A-Z]/.test(val);
+        const hasLower = /[a-z]/.test(val);
+        const hasBanana = val.includes('banana');
+
+        const symbols = val.match(/[!@#$%^&*(),.?":{}|<>[\]\\/_\-+=~`']/g) || [];
+        const symbolCount = symbols.length;
+        document.getElementById('pw-symbol-curr').innerText = symbolCount;
+
+        const numbers = val.match(/[0-9]/g) || [];
+        const numberCount = numbers.length;
+        document.getElementById('pw-number-curr').innerText = numberCount;
+
+        const lengthIsPrime = isPrime(val.length);
+        const hasDayName = val.toLowerCase().includes(currentDayOfWeek().toLowerCase());
+
+        const emojiMatches = val.match(/🍌|🦍|🐒/g) || [];
+        const emojiCount = emojiMatches.length;
+        document.getElementById('pw-emoji-curr').innerText = emojiCount;
+
+        updateCheckStyle('pw-check-upper', hasUpper);
+        updateCheckStyle('pw-check-lower', hasLower);
+        updateCheckStyle('pw-check-symbol', symbolCount === 20, symbolCount > 20);
+        updateCheckStyle('pw-check-number', numberCount === 20, numberCount > 20);
+        updateCheckStyle('pw-check-banana', hasBanana);
+        updateCheckStyle('pw-check-prime', lengthIsPrime);
+        updateCheckStyle('pw-check-day', hasDayName);
+        updateCheckStyle('pw-check-emoji', emojiCount === 3, emojiCount > 3);
+
+        if (hasUpper && hasLower && hasBanana && symbolCount === 20 && numberCount === 20 && lengthIsPrime && hasDayName && emojiCount === 3) {
+            valState.password = true;
+        } else {
+            valState.password = false;
+        }
+        updateGlobalProgress();
+    }
+
+    function updateCheckStyle(elementId, isValid, isOver = false) {
+        const el = document.getElementById(elementId);
+        if (!el) return;
+        const icon = el.querySelector('i');
+        const numTarget = el.querySelector('#pw-symbol-target') || el.querySelector('#pw-number-target') || el.querySelector('#pw-emoji-curr');
+
+        if (isValid) {
+            el.className = "flex items-center space-x-2.5 text-[10px] md:text-xs font-bold text-emerald-400 transition-colors duration-200";
+            icon.className = "fa-solid fa-circle-check text-sm flex-shrink-0";
+            if (numTarget) numTarget.className = "text-emerald-400";
+        } else {
+            if (isOver) {
+                el.className = "flex items-center space-x-2.5 text-[10px] md:text-xs font-bold text-red-500 transition-colors duration-200";
+                icon.className = "fa-solid fa-circle-exclamation text-sm animate-pulse flex-shrink-0";
+                if (numTarget) numTarget.className = "text-red-500 font-extrabold";
+            } else {
+                el.className = "flex items-center space-x-2.5 text-[10px] md:text-xs font-bold text-slate-500 transition-colors duration-200";
+                icon.className = "fa-solid fa-circle-xmark text-sm flex-shrink-0";
+                if (numTarget) numTarget.className = "text-indigo-400";
+            }
+        }
+    }
+</script>
+
+<script>
+    function handlePinInput(index) {
+        const current = document.getElementById(`pin-${index}`);
+        current.value = current.value.replace(/[^0-9]/g, '');
+
+        if (current.value !== '') {
+            playSound('click');
+            const randomSkip = Math.random() < 0.08;
+            let nextIndex = index + 1;
+            
+            if (randomSkip && nextIndex < 19) {
+                nextIndex += 1; 
+                current.classList.add('border-amber-500');
+                setTimeout(() => current.classList.remove('border-amber-500'), 200);
+            }
+
+            if (nextIndex < 20) {
+                document.getElementById(`pin-${nextIndex}`).focus();
+            }
+        }
+        validatePin();
+    }
+
+    function handlePinKey(event, index) {
+        if (event.key === 'Backspace' || event.key === 'Delete') {
+            event.preventDefault();
+            playSound('error');
+            const el = document.getElementById(`pin-${index}`);
+            el.classList.add('shaking', 'border-red-500');
+            setTimeout(() => el.classList.remove('shaking', 'border-red-500'), 300);
+        }
+    }
+
+    function clearPin() {
+        playSound('error');
+        for (let i = 0; i < 20; i++) {
+            document.getElementById(`pin-${i}`).value = '';
+        }
+        document.getElementById('pin-0').focus();
+        validatePin();
+    }
+
+    function validatePin() {
+        let pinStr = '';
+        for (let i = 0; i < 20; i++) {
+            pinStr += document.getElementById(`pin-${i}`).value;
+        }
+
+        if (pinStr.length === 20) {
+            valState.pin = true;
+        } else {
+            valState.pin = false;
+        }
+        updateGlobalProgress();
+    }
+
+    function validateAgreement() {
+        const originalText = document.getElementById('agreement-original').innerText.trim();
+        const userInput = document.getElementById('agreement-input').value;
+        const feedback = document.getElementById('agreement-feedback');
+        const matchPercentSpan = document.getElementById('agreement-match-percent');
+        const statusSpan = document.getElementById('agreement-status');
+
+        let matchCount = 0;
+        const minLength = Math.min(originalText.length, userInput.length);
+
+        for (let i = 0; i < minLength; i++) {
+            if (originalText[i] === userInput[i]) {
+                matchCount++;
+            }
+        }
+
+        const matchPercent = Math.round((matchCount / originalText.length) * 100);
+        matchPercentSpan.innerText = `${matchPercent}%`;
+
+        if (originalText === userInput) {
+            valState.agreement = true;
+            statusSpan.innerText = "一致！ (合意完了)";
+            statusSpan.className = "text-emerald-400 font-black";
+            feedback.className = "text-[10px] md:text-xs font-semibold text-emerald-400 flex items-center justify-between";
+        } else {
+            valState.agreement = false;
+            statusSpan.innerText = "不一致";
+            statusSpan.className = "text-red-400 font-bold";
+            feedback.className = "text-[10px] md:text-xs font-semibold text-slate-400 flex items-center justify-between";
+        }
+        updateGlobalProgress();
+    }
+
+    let catchedBananaCount = 0;
+    let captchaWarpTimer = null;
+
+    function startCaptchaWarp() {
+        const target = document.getElementById('banana-target');
+        const area = document.getElementById('captcha-area');
+
+        clearInterval(captchaWarpTimer);
+        captchaWarpTimer = setInterval(() => {
+            if (valState.captcha) return; 
+
+            const areaW = area.clientWidth - 45;
+            const areaH = area.clientHeight - 45;
+
+            const randomX = Math.floor(Math.random() * Math.max(10, areaW));
+            const randomY = Math.floor(Math.random() * Math.max(10, areaH));
+
+            target.style.left = `${randomX}px`;
+            target.style.top = `${randomY}px`;
+        }, 1100);
+    }
+
+    window.addEventListener('resize', () => {
+        if (!valState.captcha) {
+            const target = document.getElementById('banana-target');
+            target.style.left = '45%';
+            target.style.top = '35%';
+        }
+    });
+
+    function catchBanana(e) {
+        e.stopPropagation();
+        if (valState.captcha) return;
+
+        catchedBananaCount++;
+        playSound('combo');
+        document.getElementById('captcha-count').innerText = catchedBananaCount;
+
+        const target = document.getElementById('banana-target');
+        target.classList.add('bg-emerald-500/40', 'border-emerald-500');
+        setTimeout(() => target.classList.remove('bg-emerald-500/40', 'border-emerald-500'), 150);
+
+        if (catchedBananaCount >= 3) {
+            valState.captcha = true;
+            clearInterval(captchaWarpTimer);
+            target.style.left = '45%';
+            target.style.top = '35%';
+            target.innerHTML = '✅';
+            document.getElementById('captcha-feedback').innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> 人間であることを確認しました（バナナ捕獲成功）`;
+            document.getElementById('captcha-feedback').className = "text-[10px] md:text-xs font-semibold text-emerald-400 flex items-center gap-1";
+            playSound('success');
+        } else {
+            const area = document.getElementById('captcha-area');
+            const randomX = Math.floor(Math.random() * Math.max(10, area.clientWidth - 45));
+            const randomY = Math.floor(Math.random() * Math.max(10, area.clientHeight - 45));
+            target.style.left = `${randomX}px`;
+            target.style.top = `${randomY}px`;
+        }
+        updateGlobalProgress();
+    }
+
+    function validateTripleConsent() {
+        const checked = document.getElementById('check-triple-consent').checked;
+        const feedback = document.getElementById('triple-feedback');
+
+        if (checked) {
+            valState.terms_triple = true;
+            feedback.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> 三重否定同意を確認しました（メルマガ購読完了）。`;
+            feedback.className = "text-[10px] md:text-xs font-semibold text-emerald-400 flex items-center gap-1";
+            playSound('click');
+        } else {
+            valState.terms_triple = false;
+            feedback.innerHTML = `<i class="fa-solid fa-circle-exclamation text-red-400"></i> 拒否の拒否を取り消すことに同意していません！`;
+            feedback.className = "text-[10px] md:text-xs font-semibold text-red-400 flex items-center gap-1";
+        }
+        updateGlobalProgress();
+    }
+</script>
+
+<script>
+    
+    // Field 11: RGB Matcher
+    function updateRGBMatcher() {
+        const r = parseInt(document.getElementById('slide-r').value);
+        const g = parseInt(document.getElementById('slide-g').value);
+        const b = parseInt(document.getElementById('slide-b').value);
+        
+        document.getElementById('val-r').innerText = r;
+        document.getElementById('val-g').innerText = g;
+        document.getElementById('val-b').innerText = b;
+
+        const preview = document.getElementById('user-color-preview');
+        preview.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+        document.getElementById('user-rgb-text').innerText = `R:${r}, G:${g}, B:${b}`;
+
+        const feedback = document.getElementById('rgb-feedback');
+
+        const diffR = Math.abs(r - 255);
+        const diffG = Math.abs(g - 225);
+        const diffB = Math.abs(b - 53);
+
+        if (diffR <= 5 && diffG <= 5 && diffB <= 5) {
+            valState.rgb_match = true;
+            feedback.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> バナナ色に適合しました！（許容誤差内：R:${r} G:${g} B:${b}）`;
+            feedback.className = "text-[10px] md:text-xs font-semibold text-emerald-400 flex items-center gap-1";
+            playSound('success');
+        } else {
+            valState.rgb_match = false;
+            feedback.innerHTML = `<i class="fa-solid fa-circle-exclamation text-red-400"></i> 色の誤差を検知。完全なるバナナ色 (255, 225, 53) に近づけてください（許容誤差±5）。`;
+            feedback.className = "text-[10px] md:text-xs font-semibold text-red-400 flex items-center gap-1";
+        }
+        updateGlobalProgress();
+    }
+
+    function adjustRGB(color, amount) {
+        playSound('click');
+        const slider = document.getElementById(`slide-${color}`);
+        let val = parseInt(slider.value) + amount;
+        if (val < 0) val = 0;
+        if (val > 255) val = 255;
+        slider.value = val;
+        updateRGBMatcher();
+    }
+
+    function startAutoRGB() {
+        initAudio();
+        playSound('click');
+        
+        const btn = document.getElementById('btn-auto-rgb');
+        const adContainer = document.getElementById('rgb-ad-container');
+        const adTimer = document.getElementById('rgb-ad-timer');
+        const adContent = document.getElementById('rgb-ad-content');
+        
+        btn.disabled = true;
+        btn.classList.add('opacity-50', 'cursor-not-allowed');
+        adContainer.classList.remove('hidden');
+
+        const ads = [
+            "「バナナを1本買うと、もう1本は有料！」",
+            "「ゴリラも驚く！圧倒的バナナ成分99%配合の謎の飲料水」",
+            "「プレミアム極悪メンバーシップ：月額877円で登録制限時間を5秒延長！」",
+            "「皮をむかずに食べる新世代バナナ、近日登場（大嘘）」"
+        ];
+        adContent.innerText = ads[Math.floor(Math.random() * ads.length)];
+
+        let timeLeft = 3;
+        adTimer.innerText = timeLeft;
+
+        const countdown = setInterval(() => {
+            timeLeft--;
+            adTimer.innerText = timeLeft;
+            playSound('tick');
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                
+                // Set to target values exactly
+                document.getElementById('slide-r').value = 255;
+                document.getElementById('slide-g').value = 225;
+                document.getElementById('slide-b').value = 53;
+                
+                updateRGBMatcher();
+                
+                adContainer.classList.add('hidden');
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                playSound('success');
+            }
+        }, 1000);
+    }
+
+    // Field 12: Virtue Gacha
+    let gachaCount = 0;
+    function rollVirtueGacha() {
+        initAudio();
+        gachaCount++;
+        document.getElementById('gacha-trials').innerText = gachaCount;
+
+        const resultDisplay = document.getElementById('gacha-result');
+        const feedback = document.getElementById('gacha-feedback');
+        
+        // 5% chance of ultimate virtue
+        const rolledNum = Math.random();
+
+        if (rolledNum < 0.05) {
+            valState.virtue_gacha = true;
+            resultDisplay.innerText = "【極大徳（ウルトラ徳）】が覚醒しました！";
+            resultDisplay.className = "text-sm font-black text-emerald-400 animate-bounce tracking-wider";
+            feedback.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> アカウントに徳が付与されました。これ以上のガチャは不要です。`;
+            feedback.className = "text-[10px] md:text-xs font-semibold text-emerald-400 flex items-center gap-1";
+            playSound('success');
+            confetti({
+                particleCount: 50,
+                spread: 30,
+                origin: { y: 0.8 }
+            });
+        } else {
+            valState.virtue_gacha = false;
+            let failureMsg = "徳不十分：ただの小悪";
+            const randType = Math.floor(Math.random() * 5);
+            if (randType === 0) failureMsg = "徳不十分：大凶レベルの怠惰";
+            else if (randType === 1) failureMsg = "徳不十分：バナナ軽視罪の疑い";
+            else if (randType === 2) failureMsg = "徳不十分：キーボード連打不足";
+            else if (randType === 3) failureMsg = "徳不十分：微小なる善徳のみ";
+            
+            resultDisplay.innerText = failureMsg;
+            resultDisplay.className = "text-sm font-black text-red-500 tracking-wider";
+            feedback.innerHTML = `<i class="fa-solid fa-circle-exclamation text-red-400"></i> まだまだ徳が足りません。根気よく回し続けてください。`;
+            feedback.className = "text-[10px] md:text-xs font-semibold text-red-400 flex items-center gap-1";
+            playSound('error');
+        }
+        updateGlobalProgress();
+    }
+
+    // Field 13: Micro Precision Income Slider
+    function formatCurrency(num) {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    function onIncomeSliderInput() {
+        const val = parseInt(document.getElementById('slider-income').value);
+        document.getElementById('current-income-display').innerText = formatCurrency(val) + "円";
+        validateIncome();
+    }
+
+    function adjustIncome(amount) {
+        const slider = document.getElementById('slider-income');
+        let current = parseInt(slider.value);
+
+        if (Math.random() < 0.12) {
+            amount = -amount * 2; 
+            playSound('error');
+        } else {
+            playSound('click');
+        }
+
+        let next = current + amount;
+        if (next < 100000) next = 100000;
+        if (next > 10000000) next = 10000000;
+
+        slider.value = next;
+        document.getElementById('current-income-display').innerText = formatCurrency(next) + "円";
+        validateIncome();
+    }
+
+    function validateIncome() {
+        const target = parseInt(document.getElementById('slider-income').dataset.target);
+        const current = parseInt(document.getElementById('slider-income').value);
+        const feedback = document.getElementById('income-feedback');
+
+        if (current === target) {
+            valState.income = true;
+            feedback.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> 完璧です！世帯年収設定額が完全に適合しました。`;
+            feedback.className = "text-[10px] md:text-xs font-semibold text-emerald-400 flex items-center gap-1";
+            playSound('success');
+        } else {
+            valState.income = false;
+            feedback.innerHTML = `<i class="fa-solid fa-circle-exclamation text-red-400"></i> 指定額に達していません。誤差: <strong>${formatCurrency(Math.abs(current - target))}円</strong>`;
+            feedback.className = "text-[10px] md:text-xs font-semibold text-red-400 flex items-center gap-1";
+        }
+        updateGlobalProgress();
+    }
+
+    // Field 14: Confession of Crime
+    function validateConfession() {
+        const input = document.getElementById('confession-input');
+        const countSpan = document.getElementById('confession-char-count');
+        const statusSpan = document.getElementById('confession-status');
+        const feedback = document.getElementById('confession-feedback');
+        const val = input.value;
+
+        countSpan.innerText = val.length;
+
+        if (val.length >= 50) {
+            valState.confession = true;
+            statusSpan.innerText = "適合 (十分な懺悔)";
+            statusSpan.className = "text-emerald-400 font-black";
+            feedback.className = "text-[10px] md:text-xs font-semibold text-emerald-400 flex items-center justify-between";
+        } else {
+            valState.confession = false;
+            statusSpan.innerText = "文字数不足";
+            statusSpan.className = "text-red-400 font-bold";
+            feedback.className = "text-[10px] md:text-xs font-semibold text-slate-400 flex items-center justify-between";
+        }
+        updateGlobalProgress();
+    }
+
+    // Field 15: Banana Harvest Timing Game Logic (Replaced Scroll Percentage Lock)
+    let harvestPercent = 0;
+    let harvestDirection = 1;
+    let harvestInterval = null;
+    let harvestSpeed = 1.6; // High speed default
+    let isHarvestStopped = false;
+
+    function startHarvestGameLoop() {
+        if (harvestInterval) clearInterval(harvestInterval);
+        isHarvestStopped = false;
+        
+        const bar = document.getElementById('harvest-gauge-bar');
+        const display = document.getElementById('harvest-percentage-display');
+
+        harvestInterval = setInterval(() => {
+            if (isHarvestStopped) return;
+
+            harvestPercent += (harvestDirection * harvestSpeed);
+
+            if (harvestPercent >= 100) {
+                harvestPercent = 100;
+                harvestDirection = -1;
+            } else if (harvestPercent <= 0) {
+                harvestPercent = 0;
+                harvestDirection = 1;
+            }
+
+            bar.style.width = `${harvestPercent}%`;
+            display.innerText = `${harvestPercent.toFixed(1)}%`;
+        }, 16); // ~60fps smooth loop
+    }
+
+    function stopHarvest() {
+        if (isHarvestStopped) return;
+        isHarvestStopped = true;
+        clearInterval(harvestInterval);
+        playSound('click');
+
+        const feedback = document.getElementById('harvest-feedback');
+        const display = document.getElementById('harvest-percentage-display');
+        
+        const target = 87.7;
+        const diff = Math.abs(harvestPercent - target);
+
+        // Allow ±15.0% tolerance (As requested: "15の誤差をさすがに許して")
+        if (diff <= 15.0) {
+            valState.banana_harvest = true;
+            display.className = "text-sm font-black text-emerald-400 animate-pulse w-16 text-right";
+            feedback.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> おおむね収穫成功！バナナ熟度: ${harvestPercent.toFixed(1)}% (目標 87.7% に対して誤差: ±${diff.toFixed(2)}% / 15.0%以内)`;
+            feedback.className = "text-[10px] md:text-xs font-semibold text-emerald-400 flex items-center gap-1";
+            playSound('success');
+        } else {
+            valState.banana_harvest = false;
+            display.className = "text-sm font-black text-red-500 w-16 text-right";
+            feedback.innerHTML = `<i class="fa-solid fa-circle-exclamation text-red-400"></i> さすがに外れすぎです！熟度が足りないか腐っています。現在: ${harvestPercent.toFixed(1)}% (誤差: ${diff.toFixed(2)}%)`;
+            feedback.className = "text-[10px] md:text-xs font-semibold text-red-400 flex items-center gap-1";
+            playSound('error');
+        }
+        updateGlobalProgress();
+    }
+
+    function resetHarvest() {
+        playSound('click');
+        valState.banana_harvest = false;
+        document.getElementById('harvest-percentage-display').className = "text-sm font-black text-red-500 w-16 text-right";
+        document.getElementById('harvest-feedback').innerHTML = `<i class="fa-solid fa-circle-question"></i> 動く熟度ゲージを「72.7%〜100.0%」の広大な範囲でストップさせてください。`;
+        document.getElementById('harvest-feedback').className = "text-[10px] md:text-xs font-semibold text-slate-400 flex items-center gap-1";
+        
+        startHarvestGameLoop();
+        updateGlobalProgress();
+    }
+
+    function startSlowHarvestCM() {
+        initAudio();
+        playSound('click');
+
+        const btn = document.getElementById('btn-slow-harvest');
+        const adContainer = document.getElementById('harvest-ad-container');
+        const adTimer = document.getElementById('harvest-ad-timer');
+        const adContent = document.getElementById('harvest-ad-content');
+
+        btn.disabled = true;
+        btn.classList.add('opacity-50', 'cursor-not-allowed');
+        adContainer.classList.remove('hidden');
+
+        const ads = [
+            "「バナナの皮で滑る確率を科学するマガジン、創刊！」",
+            "「今ならバナナの香りのする香水を全員にプレゼント（送料自己負担）」",
+            "「バナナを極限まで引き伸ばす謎のエクササイズマシーン登場」",
+            "「1日1バナナで医者いらず？最新のゴリラ健康法を大公開」"
+        ];
+        adContent.innerText = ads[Math.floor(Math.random() * ads.length)];
+
+        let timeLeft = 3;
+        adTimer.innerText = timeLeft;
+
+        const countdown = setInterval(() => {
+            timeLeft--;
+            adTimer.innerText = timeLeft;
+            playSound('tick');
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                
+                // Slow down the speed drastically
+                harvestSpeed = 0.15;
+                
+                adContainer.classList.add('hidden');
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                playSound('success');
+
+                // Restart with slower speed if currently active
+                if (!isHarvestStopped) {
+                    startHarvestGameLoop();
+                }
+            }
+        }, 1000);
+    }
+</script>
+
+<script>
+    function updateGlobalProgress() {
+        const totalFields = Object.keys(valState).length;
+        const completedFields = Object.values(valState).filter(v => v === true).length;
+        const percent = Math.round((completedFields / totalFields) * 100);
+
+        const bar = document.getElementById('overall-progress-bar');
+        const text = document.getElementById('overall-progress-text');
+        const submitBtn = document.getElementById('btn-submit');
+
+        bar.style.width = `${percent}%`;
+        text.innerText = `${percent}% (${completedFields}/${totalFields})`;
+
+        if (percent === 100) {
+            submitBtn.innerHTML = `<i class="fa-solid fa-lock-open mr-2"></i>今なら登録できます！`;
+            submitBtn.className = "w-full py-3.5 md:py-4 px-6 bg-gradient-to-r from-emerald-500 via-teal-500 to-green-500 rounded-xl font-extrabold text-slate-900 shadow-xl text-center select-none uppercase tracking-widest text-xs md:text-sm transition-all duration-300 transform scale-105 cursor-pointer";
+        } else {
+            submitBtn.innerHTML = `<i class="fa-solid fa-lock mr-2"></i>アカウント安全登録`;
+            submitBtn.className = "w-full py-3.5 md:py-4 px-6 bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 rounded-xl font-extrabold text-slate-100 shadow-xl text-center select-none uppercase tracking-widest text-xs md:text-sm transition-all duration-300 transform";
+        }
+    }
+
+    function handleSubmit(event) {
+        event.preventDefault();
+        
+        const allValid = Object.values(valState).every(v => v === true);
+        if (!allValid) {
+            playSound('error');
+            alert('すべての地獄セキュリティ関門（15個）を完璧にクリアしてください！');
+            return;
+        }
+
+        playSound('success');
+        confetti({
+            particleCount: 200,
+            spread: 90,
+            origin: { y: 0.6 }
+        });
+
+        const modal = document.getElementById('success-modal');
+        modal.classList.remove('pointer-events-none', 'opacity-0');
+        modal.querySelector('.transform').classList.remove('scale-95');
+        modal.querySelector('.transform').classList.add('scale-100');
+    }
+
+    function closeSuccessModal() {
+        playSound('click');
+        const modal = document.getElementById('success-modal');
+        modal.classList.add('pointer-events-none', 'opacity-0');
+        window.location.reload();
+    }
+</script>
+
+</body>
+</html>
